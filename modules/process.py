@@ -17,9 +17,9 @@ def grade(filename):
     #filename = str(filename)
     print 'entered grade'
     output = filename
-    img= extract_fundus(filename)
-    img = cv2.imread(filename)
-    print 'exitted extract funsdus'
+    #img= extract_fundus(filename)
+    #img = cv2.imread(filename)
+    #print 'exitted extract funsdus'
     #cv2.imwrite(output, remove_glare.remove_glare(img))
-    print 'exitted rempve glare'
+    #print 'exitted rempve glare'
     return theia.grade_request(output)

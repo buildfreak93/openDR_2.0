@@ -6,7 +6,7 @@ Version: openDR_2.0
 Acknowledgements: Koteshwara Rao Chilakala, Sree Charan Manamala.
 """
 from import_api import *
-from gui_api2 import Owl_Gui, Owl_Gui_mrnum, owl_screen3 ,screen4_wifi,owl_grade,pwdEntry,confirm_shut
+from gui_api import Owl_Gui, Owl_Gui_mrnum, owl_screen3 ,screen4_wifi,owl_grade,pwdEntry,confirm_shut
 from cam_api import Fundus_Cam
 class main():
 
@@ -147,7 +147,7 @@ class main():
                 self.fc.pi_capture()
             elif retVal == 4:
                 GradeVal = self.fc.img_grade()
-                obj_grade = owl_grade()
+                obj_grade = owl_grade(GradeVal)
                 break
         while True:
 
