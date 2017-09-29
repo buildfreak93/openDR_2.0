@@ -13,7 +13,7 @@ class Owl_Gui():
 
         self.display_width = 800
         self.display_height = 480
-        self.imagepath = ('/home/pi/openDR_New/Icons/')
+        self.imagepath = ('/home/pi/openDR_2.0/Icons/')
         self.img = pygame.image.load(self.imagepath + 'touch_screen.png')
         self.img_resized = pygame.transform.scale(self.img,(self.display_width,self.display_height))
         self.screen = pygame.display.set_mode((self.display_width,self.display_height))
@@ -44,7 +44,7 @@ class Owl_Gui_mrnum():
         self.display_width = 800
         self.display_height = 480
         self.black = (0,0,0)
-        self.imagepath = ('/home/pi/openDR_New/Icons/')
+        self.imagepath = ('/home/pi/openDR_2.0/Icons/')
         self.screen = pygame.display.set_mode((self.display_width,self.display_height))
         pygame.display.set_caption('OWL_2')
         self.clock = pygame.time.Clock()
@@ -160,7 +160,7 @@ class Owl_Gui_mrnum():
 ####Confirm shutdown screen
 class confirm_shut():
     def __init__(self):
-        self.imagepath = ('/home/pi/openDR_New/Icons/')
+        self.imagepath = ('/home/pi/openDR_2.0/Icons/')
         self.gray = (35,31,32)
         self.back_Btn=pygame.image.load(self.imagepath + 'Back_Btn.png')
         self.back_hvr_Btn=pygame.image.load(self.imagepath + 'Back_hvr_Btn.png')
@@ -210,7 +210,7 @@ class confirm_shut():
 class owl_screen3():
     def __init__(self):
 #a dynamic grading key
-        self.imagepath = ('/home/pi/openDR_New/Icons/')
+        self.imagepath = ('/home/pi/openDR_2.0/Icons/')
         self.i=1 # initial_counter
         ###### upd variable #####################
         self.flag =1
@@ -435,8 +435,8 @@ class owl_screen3():
 
 ##### Screen for display of grade
 class owl_grade():
-    def __init__(self):
-        self.imagepath = ('/home/pi/openDR_New/Icons/')
+    def __init__(self,GradeVal):
+        self.imagepath = ('/home/pi/openDR_2.0/Icons/')
         self.display_width = 800
         self.display_height = 480
         self.black = (0,0,0)
@@ -445,6 +445,7 @@ class owl_grade():
         pygame.display.set_caption('OWL')
         clock = pygame.time.Clock()
         self.next_Btn=pygame.image.load(self.imagepath + 'next.png')
+        self.GradeVal=0
 
     def name(self,GradeVal):
         pygame.init()
@@ -459,7 +460,7 @@ class owl_grade():
         grade_text = font.render('Grade :',0,(255,255,255))
         grade_value = font.render(GradeVal,0,(255,255,255))
         self.screen.blit(grade_text,(210,100))
-        self.screen.blit(grade_value,(410,100))
+        self.screen.blit(self.GradeVal,(410,100))
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
         if 771 > mouse[0] > 750 and 224 > mouse[1] > 176:
@@ -512,7 +513,7 @@ class Finder:
 
 class screen4_wifi():
     def __init__(self):
-        self.imagepath = ('/home/pi/openDR_New/Icons/')
+        self.imagepath = ('/home/pi/openDR_2.0/Icons/')
         self.event1 = Event()
         self.event2 = Event()
         self.event3 = Event()
@@ -536,10 +537,10 @@ class screen4_wifi():
         self.text = ['']
         self.lines_4 = []
         self.clickButton = 0
-        self.f11 = open('/home/pi/openDR_New/' + 'network.txt','r')
+        self.f11 = open('/home/pi/openDR_2.0/' + 'network.txt','r')
         self.lines_1 = self.f11.readlines()
         self.f11.close()
-        self.f11 = open('/home/pi/openDR_New/' + 'network.txt','r')
+        self.f11 = open('/home/pi/openDR_2.0/' + 'network.txt','r')
         self.lines = len(self.f11.readlines())
         for self.i in range(self.lines):
             self.ch.append(self.lines_1[self.i])
@@ -636,7 +637,7 @@ class screen4_wifi():
 
 class pwdEntry():
     def __init__(self):
-        self.imagepath = ('/home/pi/openDR_New/Icons/')
+        self.imagepath = ('/home/pi/openDR_2.0/Icons/')
         self.clickButton = -1
         self.display_width = 800
         self.display_height = 480
@@ -644,7 +645,7 @@ class pwdEntry():
         self.screen1 = pygame.display.set_mode((self.display_width,self.display_height))
         self.screen1.fill((35,31,32))
         self.event3 = Event()
-        self.f11 = open('/home/pi/openDR_New/' + 'network.txt','r')
+        self.f11 = open('/home/pi/openDR_2.0/' + 'network.txt','r')
         self.lines_1 = self.f11.readlines()
         self.f11.close()
         self.lines_4 = []
@@ -668,7 +669,7 @@ class pwdEntry():
         self.screen1.blit(block,(300,160))
         pygame.display.update()
         if(len(text) >= 1):
-            self.f11=open('/home/pi/openDR_New' + 'network.txt',"wb")
+            self.f11=open('/home/pi/openDR_2.0/' + 'network.txt',"wb")
             self.f11.write(text)
             self.f11.close()
         return text

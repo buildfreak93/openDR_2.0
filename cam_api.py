@@ -22,7 +22,7 @@ class Fundus_Cam(object):
     def __init__(self):
         self.base_folder = '/home/pi/OWL/'
         self.time = datetime.datetime.now()
-        self.saveDir = self.base_folder + str(self.time.year) +'-'+ str(self.time.month) +'-'+ str(self.time.day) +'/'+ open('/home/pi/openDR_New/Icons/mr_num.txt',"r").read() +'/images/'
+        self.saveDir = self.base_folder + str(self.time.year) +'-'+ str(self.time.month) +'-'+ str(self.time.day) +'/'+ open('/home/pi/openDR_2.0/Icons/mr_num.txt',"r").read() +'/images/'
         print self.saveDir
 	if not os.path.isdir(self.saveDir):
             os.makedirs(self.saveDir)

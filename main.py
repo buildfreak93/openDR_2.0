@@ -147,7 +147,7 @@ class main():
                 self.fc.pi_capture()
             elif retVal == 4:
                 GradeVal = self.fc.img_grade()
-                obj_grade = owl_grade()
+                obj_grade = owl_grade(GradeVal)
                 break
         while True:
 
