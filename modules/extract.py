@@ -116,8 +116,5 @@ def extract_fundus(filename):
     print 'circles extractd'
     threshed_image=erode_thresh(circle)
     print 'img eroded'
-    cv2.namedWindow('entered ext_fundus',cv2.WINDOW_AUTOSIZE)
-    cv2.imshow('entered ext_fundus',threshed_image)
-    cv2.waitKey(0)
     return ellipse_fit(circle,threshed_image)
 

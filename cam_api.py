@@ -7,7 +7,7 @@ Version: openDR v2.0
 
 from import_api import *
 import sys
-sys.path.insert(0, '/home/pi/openDR/modules/')
+sys.path.insert(0, '/home/pi/openDR_2.0/modules/')
 
 # adding modules folder to the start of python search path
 import process      # our processing module
@@ -31,19 +31,25 @@ class Fundus_Cam(object):
         self.camera.resolution = (640, 480)
         self.camera.framerate = 60
         self.stream = io.BytesIO()
-        self.camera.start_preview(fullscreen = False,window = (60,60,640,480))
+        #self.start_preview()
+        #self.camera.start_preview(fullscreen = False,window = (60,60,640,480))
 
     def stop_preview(self):
         self.camera.stop_preview()
 
+    def start_preview(self):
+        self.camera.start_preview(fullscreen = False,window = (60,60,640,480))
+
+
     def pi_capture(self):
+        capture_flag = True
         for i in range(0,3):
             self.flag = 0
             self.camera.capture(self.stream,format='jpeg',use_video_port=False)
             Thread(target=self.pi_write,args=(self.stream,)).start()
             self.stream.truncate()
             self.stream.seek(0)
-        return 1
+        return capture_flag
 
     def pi_write(self,stream):
         self.count += 1
@@ -54,7 +60,7 @@ class Fundus_Cam(object):
     #def stitch(srcFolder):
 
     def img_grade(self):
-        print(self.saveDir + str(self.count) + '.jpg')
+        file_path = self.saveDir + str(self.count) + '.jpg'
         grade_val = str(grade(self.saveDir + str(self.count) + '.jpg'))[:4]
-        return grade_val
+        return grade_val, file_path
 

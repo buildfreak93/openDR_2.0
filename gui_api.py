@@ -88,7 +88,9 @@ class Owl_Gui_mrnum():
 
     # accepts the input from keyboard
     def consumer(self,text):
-        font = pygame.font.SysFont("Roboto", 50)
+        if len(text)>=10:
+            text = text[0:9]
+        font = pygame.font.SysFont("Helvetica", 40)
         block = font.render(text, True,(180,180,180))
         self.screen.blit(block,(300,160))
         self.screen.fill((0,0,0),(300,160,400,70))
@@ -98,7 +100,7 @@ class Owl_Gui_mrnum():
             self.f11=open(self.imagepath + 'mr_num.txt',"wb")
             self.f11.write(text)
             self.f11.close()
-        return text
+        return self.text
 
     # accepts the main window
     def name(self,event1,event2,keyboard):
@@ -441,13 +443,22 @@ class owl_grade():
         self.display_height = 480
         self.black = (0,0,0)
         self.screen = pygame.display.set_mode((self.display_width,self.display_height))
+        self.screen1 = pygame.display.set_mode((self.display_width,self.display_height))
+        self.screen1.fill(self.black)
         self.screen.fill(self.black)
         pygame.display.set_caption('OWL')
         clock = pygame.time.Clock()
-        self.next_Btn=pygame.image.load(self.imagepath + 'next.png')
-        self.GradeVal=0
+        self.next_Btn=pygame.image.load(self.imagepath + 'Next_Btn.png')
+        self.next_hvr_Btn=pygame.image.load(self.imagepath + 'Next_hvr_Btn.png')
 
-    def name(self,GradeVal):
+        self.next_Btn_inv=pygame.transform.rotate(self.next_Btn,180)
+        self.next_hvr_Btn_inv=pygame.transform.rotate(self.next_hvr_Btn,180)
+        self.GradeVal=0
+        self.mrnum = str(open('/home/pi/openDR_2.0/Icons/mr_num.txt',"r").read())
+
+
+    def name(self,GradeVal,file_path,flip_flag):
+        retVal = 0
         pygame.init()
         font = pygame.font.SysFont("helvetica",50)
         pygame.display.flip()
@@ -456,18 +467,59 @@ class owl_grade():
                 pygame.quit()
                 running = False
 
-        self.screen.blit(self.next_Btn,(750,185))
         grade_text = font.render('Grade :',0,(255,255,255))
         grade_value = font.render(GradeVal,0,(255,255,255))
-        self.screen.blit(grade_text,(210,100))
-        self.screen.blit(self.GradeVal,(410,100))
-        mouse = pygame.mouse.get_pos()
-        click = pygame.mouse.get_pressed()
-        if 771 > mouse[0] > 750 and 224 > mouse[1] > 176:
-            if click[0] == 1:
-          ##### return to mr number screen
-                Owl_Gui_mrnum()
+        mrnum_value = font.render(self.mrnum,0,(255,255,255))
+        mrnum_text = font.render('MR_No:',0,(255,255,255))
+
+        #self.screen.blit(self.next_Btn,(750,125))
+        if not flip_flag:
+            self.screen.blit(grade_text,(210,100))
+            self.screen.blit(grade_value,(410,100))
+            self.screen.blit(mrnum_text,(210,50))
+            self.screen.blit(mrnum_value,(410,50))
+            self.fundus_img=pygame.image.load(file_path)
+            self.img = pygame.transform.scale(self.fundus_img,(300,200))
+            self.screen.blit(self.img,(200,200))
+            mouse = pygame.mouse.get_pos()
+            click = pygame.mouse.get_pressed()
+
+            if (788 > mouse[0] > 750) and (238 > mouse[1] > 125):
+                self.screen.fill(self.black,(750,125,38,113))
+                self.screen.blit(self.next_hvr_Btn,(750,125))
+                if click[0] == 1:
+                    retVal = 1
+            else:
+                self.screen.fill(self.black,(750,125,38,113))
+                self.screen.blit(self.next_Btn,(750,125))
+
+        else:
+            grade_text_rot = pygame.transform.rotate(grade_text,180)
+            grade_val_rot = pygame.transform.rotate(grade_value,180)
+            self.screen1.blit(grade_text_rot,(550,330))
+            self.screen1.blit(grade_val_rot,(340,330))
+            mrnum_value_rot = pygame.transform.rotate(mrnum_value,180)
+            mrnum_text_rot = pygame.transform.rotate(mrnum_text,180)
+
+            self.screen1.blit(mrnum_text_rot,(550,400))
+            self.screen1.blit(mrnum_value_rot,(340,400))
+            self.fundus_img=pygame.image.load(file_path)
+            self.img = pygame.transform.scale(self.fundus_img,(300,200))
+            self.img_rot = pygame.transform.rotate(self.img,180)
+            self.screen1.blit(self.img_rot,(300,10))
+            mouse = pygame.mouse.get_pos()
+            click = pygame.mouse.get_pressed()
+            if (88 > mouse[0] > 50) and (355 > mouse[1] > 242):
+                self.screen1.fill(self.black,(50,242,38,113))
+                self.screen1.blit(self.next_hvr_Btn_inv,(50,242))
+                if click[0] == 1:
+                    retVal = 1
+            else:
+                self.screen1.fill(self.black,(50,242,38,113))
+                self.screen1.blit(self.next_Btn_inv,(50,242))
+
         pygame.display.flip()
+        return retVal
 
 ####Gui for wifi network display and connectivity
 
@@ -635,6 +687,21 @@ class screen4_wifi():
         self.screen.blit(textSurf, textRect)
         return retVal
 
+
+    def crct_entry(self):
+        font = pygame.font.SysFont(self.fontStyle, 20)
+        text_1 = font.render("Connected", 0,(255,255,255))
+        self.screen.fill((0,0,0),(100,30,100,30))
+        self.screen.blit(text_1,(100,30))
+        pygame.display.flip()
+
+    def wrong_entry(self):
+        font = pygame.font.SysFont(self.fontStyle, 20)
+        text_1 = font.render("Disconnected", 0,(255,255,255))
+        self.screen.fill((0,0,0),(100,30,100,30))
+        self.screen.blit(text_1,(100,30))
+        pygame.display.flip()
+
 class pwdEntry():
     def __init__(self):
         self.imagepath = ('/home/pi/openDR_2.0/Icons/')
@@ -654,6 +721,14 @@ class pwdEntry():
         self.next_btn=pygame.image.load(self.imagepath + 'Next_Btn.png')
         self.next_hvr_btn=pygame.image.load(self.imagepath + 'Next_hvr_Btn.png')
 
+#####Confirm network connectivity
+    def internet_on(self):
+        try:
+            urllib2.urlopen('http://216.58.192.142', timeout=1)
+            return 2
+        except urllib2.URLError as err:
+            return 1
+
 #####Initialization of Keyboard
     def keyboard_init(self):
         layout = VKeyboardLayout(VKeyboardLayout.AZERTY)
@@ -665,11 +740,11 @@ class pwdEntry():
         font = pygame.font.SysFont("Helvetica", 30)
         block = font.render(text, True,(180,180,180))
         self.screen1.blit(block,(300,160))
-        self.screen1.fill((35,31,32),(300,160,400,70))
+        self.screen1.fill((0,0,0),(300,160,400,70))
         self.screen1.blit(block,(300,160))
         pygame.display.update()
         if(len(text) >= 1):
-            self.f11=open('/home/pi/openDR_2.0/' + 'network.txt',"wb")
+            self.f11=open('/home/pi/openDR_2.0/' + 'key.txt',"wb")
             self.f11.write(text)
             self.f11.close()
         return text
@@ -680,7 +755,7 @@ class pwdEntry():
         self.clickButton = clickButton
         font = pygame.font.SysFont("Helvetica", 30)
         content = font.render("Enter the password", True,(180,180,180))
-        self.screen1.fill((35,31,32),(50,30,350,50))
+        self.screen1.fill((0,0,0),(50,30,350,50))
         self.screen1.blit(content,(50,30))
         keyboard.enable()
         keyboard.draw()
@@ -709,8 +784,8 @@ class pwdEntry():
             self.screen1.blit(self.next_hvr_btn,(750,125))
             if click[0] == 1:
                 self.event3.set()
-                retVal = 2
-                self.upd1()
+                #retVal = 2
+                retVal = self.upd1()
         else:
             self.screen1.fill(self.gray,(750,125,38,113))
             self.screen1.blit(self.next_btn,(750,125))
@@ -724,10 +799,13 @@ class pwdEntry():
             self.words,self.networks,self.null=line.split('"')
             self.lines_4.append(self.networks.strip())
         if(self.event3.is_set()):
-            self.f11 = open(self.imagepath + 'key.txt','r')
+            self.f11 = open('/home/pi/openDR_2.0/' + 'key.txt','r')
             self.key = self.f11.readline()
             self.f11.close
             F = Finder(server_name=self.lines_4[self.clickButton],
                password=self.key,
                    interface="wlan0")
             F.run()
+            retVal2 = self.internet_on()
+        return retVal2
+

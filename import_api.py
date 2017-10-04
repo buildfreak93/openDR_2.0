@@ -6,6 +6,7 @@ import pygame
 import time
 import random
 import os
+import urllib2
 import serial
 from multiprocessing import Process, Queue, Event
 from PIL import Image

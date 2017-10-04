@@ -11,9 +11,8 @@ from cam_api import Fundus_Cam
 class main():
 
     def __init__(self):
-	self.flow()
-        pygame.init()
-        pygame.display.init()
+	self.fc = Fundus_Cam()
+        self.flow()
 
 
     def password(self,obj_wifi,obj_pwd,keyboard):
@@ -22,16 +21,16 @@ class main():
 	    retVal = 0
 	    retVal=obj_pwd.main(keyboard,obj_wifi.clickButton)
           ##### retVal is 1 when the back button is clicked
-            if(retVal ==1):
+            if (retVal==3):
                 obj_pwd.screen1.fill((0,0,0))
                 break
-
-          ##### retVal is 2 when the Connect button is clicked
-            elif(retVal ==2):
+            elif (retVal==1):
                 obj_pwd.screen1.fill((0,0,0))
                 break
-	print(retVal)
-	return retVal
+            elif (retVal==2):
+                obj_pwd.screen1.fill((0,0,0))
+                break
+        return retVal
 
     def wifi_screens(self,ogm):
         obj_wifi = screen4_wifi()
@@ -49,18 +48,13 @@ class main():
 		keyboard = obj_pwd.keyboard_init()
                 obj_pwd.screen1.fill((0,0,0))
 		retVal2 = self.password(obj_wifi,obj_pwd,keyboard)
-		if retVal2 == 2:
-		    break
+                print(retVal2)
+                if(retVal2 == 1):
+                    obj_wifi.crct_entry()
+                elif(retVal2 == 2):
+                    obj_wifi.wrong_entry()
     def flow(self):
-        ############# Touch to proceed Screen ###################
-        #og = Owl_Gui()
-        # Initiating the screen 1 params.
-        #font = pygame.font.Font(None, 30)
-        # Updating the screen 1.
-        #retVal = og.main_window()
-        #ogm = Owl_Gui_mrnum()
-
-        ########## Mr Number entry Screen #####################
+        ############# Touch to proceed Screen ##################
 
 
         ############# Screen 1 ###################
@@ -130,8 +124,9 @@ class main():
             # Some error with the retVal.
 
         ######### Screen 3  ########################
-        self.fc = Fundus_Cam()
+        self.fc.start_preview()
         flip_flag = False
+        capture_flag = False
         while True:
             retVal,flip_flag = os3.upd(flip_flag)
             # retVal is 1 when flip is clicked.
@@ -144,16 +139,20 @@ class main():
                 self.flow()
             # retVal is 3 when capture is clicked.
             elif retVal == 3:
-                self.fc.pi_capture()
+                capture_flag = self.fc.pi_capture()
             elif retVal == 4:
-                GradeVal = self.fc.img_grade()
-                obj_grade = owl_grade(GradeVal)
-                break
-        while True:
-
-            self.fc.stop_preview()
-            gradeval = obj_grade.name(GradeVal)
-            #elif retVal == 5:
+                if capture_flag:
+                    GradeVal, file_path = self.fc.img_grade()
+                    obj_grade = owl_grade(GradeVal)
+                    while True:
+                        self.fc.stop_preview()
+                        retVal = obj_grade.name(GradeVal,file_path,flip_flag)
+                        if retVal == 1:
+                            os3.screen1.fill((0,0,0))
+                            self.fc.start_preview()
+                            break
+            elif retVal == 5:
+                os.system()
 
 
         p1.join()
